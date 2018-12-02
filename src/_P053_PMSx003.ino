@@ -20,7 +20,7 @@
 #define PLUGIN_VALUENAME3_053 "pm10"
 #define PMSx003_SIG1 0X42
 #define PMSx003_SIG2 0X4d
-#define PMSx003_SIZE 32
+#define PMSx003_SIZE 24
 
 ESPeasySoftwareSerial *swSerial = NULL;
 boolean Plugin_053_init = false;
@@ -120,8 +120,8 @@ boolean Plugin_053_process_data(struct EventStruct *event) {
     return false;
   }
 
-  uint16_t data[13]; // byte data_low, data_high;
-  for (int i = 0; i < 13; i++)
+  uint16_t data[9]; // byte data_low, data_high;
+  for (int i = 0; i < 9; i++)
     SerialRead16(&data[i], &checksum);
 
   if (loglevelActiveFor(LOG_LEVEL_DEBUG)) {
@@ -138,22 +138,6 @@ boolean Plugin_053_process_data(struct EventStruct *event) {
     log += F(", pm10a=");
     log += data[5];
     addLog(LOG_LEVEL_DEBUG, log);
-  }
-
-  if (loglevelActiveFor(LOG_LEVEL_DEBUG_MORE)) {
-    String log = F("PMSx003 : count/0.1L : 0.3um=");
-    log += data[6];
-    log += F(", 0.5um=");
-    log += data[7];
-    log += F(", 1.0um=");
-    log += data[8];
-    log += F(", 2.5um=");
-    log += data[9];
-    log += F(", 5.0um=");
-    log += data[10];
-    log += F(", 10um=");
-    log += data[11];
-    addLog(LOG_LEVEL_DEBUG_MORE, log);
   }
 
   // Compare checksums
